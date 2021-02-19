@@ -27,19 +27,11 @@ t.test(male.auth$Gender.of.Citation=="Female", female.auth$Gender.of.Citation=="
 
 # Basic plot to start with
 ggplot(citations, aes(x=Gender.of.Citation)) +
-  geom_bar(aes(y = (..count..)/sum(..count..))) +
-  scale_y_continuous(labels = scales::percent) +
-  ylab("Percent") +
-  xlab("Gender of Cited Author") +
-  ggtitle("Gender of Cited Authors")
-
-ggplot(citations, aes(x=Gender.of.Citation)) +
   geom_bar(aes(y = (..count..)/sum(..count..), fill=Gender.of.Article.Author)) +
   scale_y_continuous(labels = scales::percent) +
   ylab("Percent") +
   xlab("Gender of Cited Author") +
   ggtitle("Gender of Cited Authors") +
   labs(fill = "Gender of Article Author")
-
 
 
