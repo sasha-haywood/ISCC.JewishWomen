@@ -85,3 +85,49 @@ ggplot(citations, aes(x=field, fill = forcats::fct_rev(Gender.of.Citation))) +
        subtitle = "dotted line at 42%") +
   geom_hline(yintercept = .42, linetype = "dotted") +
   scale_fill_manual(values=c("royalblue2", "indianred1"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+#4. Are women cited at different rates for scholarly work on different time periods?
+citations[!complete.cases(citations),]
+citations <- na.omit(citations)
+
+ggplot(citations, aes(x=time.period, fill = forcats::fct_rev(Gender.of.Citation))) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  ylab("Percent") +
+  xlab("Time periods") +
+  coord_flip() +
+  ggtitle("Gender of Cited Authors by different time periods") +
+  labs(fill = "Cited Author",
+       subtitle = "dotted line at 42%") +
+  geom_hline(yintercept = .42, linetype = "dotted") +
+  scale_fill_manual(values=c("royalblue2", "indianred1"))
+
+
+
+#5. How do Jewish Studies journals compare to the Religious Studies journal, 
+# with respect to the proportion of women scholars cited? 
+# Does that change if we control for differences between male authors and female authors?
+ggplot(citations, aes(x=journal, fill = forcats::fct_rev(Gender.of.Citation))) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  ylab("Percent") +
+  xlab("Journal") +
+  coord_flip() +
+  ggtitle("Gender of Cited Authors by different time periods") +
+  labs(fill = "Cited Author",
+       subtitle = "dotted line at 42%") +
+  geom_hline(yintercept = .42, linetype = "dotted") +
+  scale_fill_manual(values=c("royalblue2", "indianred1"))
+  
