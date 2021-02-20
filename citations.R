@@ -99,6 +99,11 @@ ggplot(citations, aes(x=field, fill = forcats::fct_rev(Gender.of.Citation))) +
 
 
 #4. Are women cited at different rates for scholarly work on different time periods?
+time.table = with(citations, table(Gender.of.Citation, time.period))
+time.table
+chisq.test(time.table)#significantly small p-value
+
+
 citations[!complete.cases(citations),]
 citations <- na.omit(citations)
 
@@ -119,6 +124,11 @@ ggplot(citations, aes(x=time.period, fill = forcats::fct_rev(Gender.of.Citation)
 #5. How do Jewish Studies journals compare to the Religious Studies journal, 
 # with respect to the proportion of women scholars cited? 
 # Does that change if we control for differences between male authors and female authors?
+journal.table = with(citations, table(Gender.of.Citation, journal))
+journal.table
+chisq.test(journal.table)#significantly small p-value
+
+
 ggplot(citations, aes(x=journal, fill = forcats::fct_rev(Gender.of.Citation))) +
   geom_bar(position = "fill") +
   scale_y_continuous(labels = scales::percent) +
