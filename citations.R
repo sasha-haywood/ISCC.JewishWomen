@@ -59,11 +59,21 @@ ggplot(citations, aes(x=Gender.of.Article.Author, fill = forcats::fct_rev(Gender
   geom_hline(yintercept = .42, linetype = "dotted") +
   scale_fill_manual(values=c("royalblue2", "indianred1"))
 
+# There is clearly a difference in different subfields
+by_field = citations %>%
+  group_by(field)
+by_field = by_field %>% summarise(
+  mean = mean(Gender.of.Citation == "Female"))
+
+# P-value is low enough to indicate the difference is significant 
+# (Chen, is this the test we should run?)
+field.table = with(citations, table(Gender.of.Citation, field))
+chisq.test(field.table)
 
 
 
 
-# best by subfield
+# best by subfield visualization
 ggplot(citations, aes(x=field, fill = forcats::fct_rev(Gender.of.Citation))) +
   geom_bar(position = "fill") +
   scale_y_continuous(labels = scales::percent) +
