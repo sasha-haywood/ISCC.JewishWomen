@@ -97,15 +97,19 @@ ggplot(citations, aes(x=field, fill = forcats::fct_rev(Gender.of.Citation))) +
 
 
 
-
-#4. Are women cited at different rates for scholarly work on different time periods?
 total.citation = sum(citations$Citation.Count)
 female.cited = subset(citations, Gender.of.Citation == "Female")
+male.cited = subset(citations, Gender.of.Citation == "Male")
 female.cited$perc.citation = female.cited$Citation.Count/total.citation
+male.cited$perc.citation = male.cited$Citation.Count/total.citation
+kruskal.test(female.cited$perc.citation ~ female.cited$time.period)#regarding different time periods
+kruskal.test(female.cited$perc.citation ~ female.cited$JS.or.RS)#regarding different journals of women 
+kruskal.test(male.cited$perc.citation ~ male.cited$JS.or.RS)#regarding different journals of men
 
-kruskal.test(female.cited$perc.citation ~ female.cited$time.period)
+citations$perc.citation = citations$Citation.Count/total.citation
+kruskal.test(citations$perc.citation ~ citations$JS.or.RS)
 
-
+#4. Are women cited at different rates for scholarly work on different time periods?
 
 citations[!complete.cases(citations),]
 citations <- na.omit(citations)
@@ -128,9 +132,7 @@ ggplot(citations, aes(x=time.period, fill = forcats::fct_rev(Gender.of.Citation)
 # with respect to the proportion of women scholars cited? 
 # Does that change if we control for differences between male authors and female authors?
 
-
-
-ggplot(citations, aes(x=journal, fill = forcats::fct_rev(Gender.of.Citation))) +
+ggplot(citations, aes(x=JS.or.RS, fill = forcats::fct_rev(Gender.of.Citation))) +
   geom_bar(position = "fill") +
   scale_y_continuous(labels = scales::percent) +
   ylab("Percent") +
@@ -143,7 +145,7 @@ ggplot(citations, aes(x=journal, fill = forcats::fct_rev(Gender.of.Citation))) +
   scale_fill_manual(values=c("royalblue2", "indianred1"))
 
 
-ggplot(citations, aes(x=Citation.Count, fill=journal)) +
+ggplot(citations, aes(x=Citation.Count, fill=JS.or.RS)) +
   geom_histogram(position = "dodge2") +
   ggtitle("Citation count by different journals")
   
