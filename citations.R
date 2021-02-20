@@ -1,5 +1,8 @@
 library(ggplot2)
 library(dplyr)
+library(ggmosaic)
+library(tidyr)
+
 citations = read.csv("citation_data.csv", colClasses = c("character", "character", 
                                                          "integer", rep("factor",7)))
 
@@ -32,6 +35,43 @@ ggplot(citations, aes(x=Gender.of.Citation)) +
   ylab("Percent") +
   xlab("Gender of Cited Author") +
   ggtitle("Gender of Cited Authors") +
-  labs(fill = "Gender of Article Author")
+  labs(fill = "Gender of Article Author") +
+  scale_fill_manual(values=c("indianred1","royalblue2"))
+
+# I wouldn't use this one.  I think the next is better.
+ggplot(citations, aes(x=Gender.of.Article.Author)) +
+  geom_bar(aes(fill=Gender.of.Citation), 
+           position = "dodge") +
+  xlab("Gender of Article Author") +
+  ggtitle("Gender of Cited Authors") +
+  labs(fill = "Gender of Cited Author") +
+  scale_fill_manual(values=c("indianred1","royalblue2"))
+
+# I think this is the best visualization.
+ggplot(citations, aes(x=Gender.of.Article.Author, fill = forcats::fct_rev(Gender.of.Citation))) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  ylab("Percent") +
+  xlab("Article Author") +
+  ggtitle("Gender of Cited Authors by Gender of Article Author") +
+  labs(fill = "Cited Author",
+    subtitle = "dotted line at 42%") +
+  geom_hline(yintercept = .42, linetype = "dotted") +
+  scale_fill_manual(values=c("royalblue2", "indianred1"))
 
 
+
+
+
+# best by subfield
+ggplot(citations, aes(x=field, fill = forcats::fct_rev(Gender.of.Citation))) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  ylab("Percent") +
+  xlab("Subfield") +
+  coord_flip() +
+  ggtitle("Gender of Cited Authors by Subfield") +
+  labs(fill = "Cited Author",
+       subtitle = "dotted line at 42%") +
+  geom_hline(yintercept = .42, linetype = "dotted") +
+  scale_fill_manual(values=c("royalblue2", "indianred1"))
