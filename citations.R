@@ -2,7 +2,7 @@ library(ggplot2)
 library(dplyr)
 library(ggmosaic)
 library(tidyr)
-
+library(extrafont)
 
 citations = read.csv("citation_data.csv", colClasses = c("character", "character", 
                                                          "integer", rep("factor",7)))
@@ -234,7 +234,9 @@ ggplot(citations, aes(x=Gender.of.Citation)) +
   ggtitle("Gender of Cited Authors") +
   labs(fill = "Gender of Article Author") +
   geom_hline(yintercept = .42, linetype = "dotted") +
-  scale_fill_grey(start = .5, end = 0)
+  scale_fill_grey(start = .5, end = 0) +
+  theme(text=element_text(size=16, 
+        family="Comic Sans MS"))
 
 # I wouldn't use this one.  I think the next is better.
 ggplot(citations, aes(x=Gender.of.Article.Author)) +
