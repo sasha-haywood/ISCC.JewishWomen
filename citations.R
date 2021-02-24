@@ -173,8 +173,57 @@ ggplot(citations) +
 
 
 
+#1 b/w pie
+pie = ggplot(citations, aes(x=1, fill = forcats::fct_rev(Gender.of.Citation))) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  ylab("") +
+  xlab("") +
+  ggtitle("Gender of Cited Authors") +
+  labs(fill = "Cited Author",
+       subtitle = "dotted line at 42%") +
+  geom_hline(yintercept = .42, linetype = "dotted") +
+  theme(axis.text = element_blank(), panel.background = element_rect(fill = "white"),
+        axis.ticks = element_line(color = "white")) +
+  scale_fill_grey(start = .5, end = 0)
+pie + coord_polar(theta = "y")
+
+#1 color pie
+pie = ggplot(citations, aes(x=1, fill = forcats::fct_rev(Gender.of.Citation))) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  ylab("") +
+  xlab("") +
+  ggtitle("Gender of Cited Authors") +
+  labs(fill = "Cited Author",
+       subtitle = "dotted line at 42%") +
+  geom_hline(yintercept = .42, linetype = "dotted") +
+  theme(axis.text = element_blank(), panel.background = element_rect(fill = "white"),
+        axis.ticks = element_line(color = "white")) +
+  scale_fill_manual(values=c("royalblue2", "indianred1"))
+pie + coord_polar(theta = "y")
 
 
+
+
+
+# I don't think we want any of this pie stuff I did next.
+gender = c(rep("Female", 27), rep("Male", 73), rep("Female", 42), rep("Male", 58))
+source = c(rep("Citation", 100), rep("Research", 100))
+donut1 = data.frame(gender, source)
+
+basic = ggplot(donut1, aes(x=source, fill=forcats::fct_rev(gender))) +
+  geom_bar() +
+  scale_fill_manual(values=c("royalblue2", "indianred1")) +
+  xlab("") +
+  ylab("") +
+  labs(fill = "Gender of Citation Author") +
+  theme(axis.text = element_blank(), panel.background = element_rect(fill = "white"),
+        axis.ticks = element_line(color = "white")) +
+  
+basic + coord_polar(theta = "y")
+
+a + coord_polar(theta = "y")
 
 # Basic plot to start with
 ggplot(citations, aes(x=Gender.of.Citation)) +
