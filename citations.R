@@ -8,9 +8,9 @@ citations = read.csv("citation_data.csv", colClasses = c("character", "character
 
 levels(citations$Gender.of.Article.Author) = list("Female" = 0, "Male" = 1)
 levels(citations$Gender.of.Citation) = list("Female" = 0, "Male" = 1)
-levels(citations$field) = list("History" = 1, "Philosophy/MJT" = 2, 
+levels(citations$field) = list("History" = 1, "Philosophy/ \n MJT" = 2, 
                                "Literature" = 3, "Ancient Text" = 4, 
-                               "Sociology/Ethnography/Contemporary" = 5)
+                               "Sociology/ \n Ethnography/ \n Contemporary" = 5)
 levels(citations$time.period) = list("Ancient" = 1, "Medieval" = 2, "Modern" =3)
 
 # Basic plot to start with
@@ -50,8 +50,6 @@ by_field = citations %>%
 by_field = by_field %>% summarise(
   mean = mean(Gender.of.Citation == "Female"))
 
-
-# best by subfield visualization
 ggplot(citations, aes(x=field, fill = forcats::fct_rev(Gender.of.Citation))) +
   geom_bar(position = "fill") +
   scale_y_continuous(labels = scales::percent) +
@@ -64,17 +62,29 @@ ggplot(citations, aes(x=field, fill = forcats::fct_rev(Gender.of.Citation))) +
   geom_hline(yintercept = .42, linetype = "dotted") +
   scale_fill_manual(values=c("royalblue2", "indianred1"))
 
+# best by subfield visualization
+ggplot(citations) +
+  geom_mosaic(aes(x=product(field), fill = Gender.of.Citation)) +
+  scale_y_continuous(labels = scales::percent) +
+  ylab("Percent") +
+  xlab("Field") +
+  ggtitle("Gender of Cited Authors by Field") +
+  labs(fill = "Gender of Cited Author",
+    subtitle = "dotted line at 42%") +
+  geom_hline(yintercept = .42, linetype = "dotted") +
+  coord_flip()
+
 
 ggplot(citations) +
-geom_mosaic(aes(x=product(field), fill = Gender.of.Citation)) +
-scale_y_continuous(labels = scales::percent) +
-ylab("Percent") +
-ggtitle("Gender of Cited Authors by Field") +
-labs(fill = "Gender of Cited Author",
-subtitle = "dotted line at 42%") +
-geom_hline(yintercept = .42, linetype = "dotted")
-mosaicplot(~ Gender.of.Article.Author + Gender.of.Citation, data = citations, color = TRUE)
-
+  geom_mosaic(aes(x=product(time.period), fill = Gender.of.Citation)) +
+  scale_y_continuous(labels = scales::percent) +
+  ylab("Percent") +
+  xlab("Time Period") +
+  ggtitle("Gender of Cited Authors by Time Period") +
+  labs(fill = "Gender of Cited Author",
+       subtitle = "dotted line at 42%") +
+  geom_hline(yintercept = .42, linetype = "dotted") +
+  coord_flip()
 
 
 
