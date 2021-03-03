@@ -4,6 +4,7 @@ library(ggmosaic)
 library(tidyr)
 library(extrafont)
 
+
 citations = read.csv("citation_data.csv", colClasses = c("character", "character", 
                                                          "integer", rep("factor",7)))
 
@@ -203,6 +204,16 @@ pie = ggplot(citations, aes(x=1, fill = forcats::fct_rev(Gender.of.Citation))) +
   scale_fill_manual(values=c("royalblue2", "indianred1"))
 pie + coord_polar(theta = "y")
 
+
+citations$Gender.of.Article.Author = factor(citations$Gender.of.Article.Author)
+citations$Gender.of.Citation = as.integer(citations$Gender.of.Citation)
+citations$JS.or.RS = factor(citations$JS.or.RS)
+citations$field = factor(citations$field)
+citations$time.period = factor(citations$time.period)
+
+
+test = lm(Gender.of.Citation ~ Gender.of.Article.Author + JS.or.RS + field + time.period, 
+           na.omit(citations))
 
 
 
