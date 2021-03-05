@@ -1,0 +1,83 @@
+---
+title: "citations"
+author: "Chen Zhou"
+date: "3/4/2021"
+output: pdf_document
+---
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(ggmosaic)
+library(tidyr)
+library(extrafont)
+library(utils)
+library(car)
+```
+
+```{r}
+citations = read.csv("citation_data.csv", colClasses = c("character", "character", 
+                                                         "integer", rep("factor",7)))
+
+levels(citations$Gender.of.Article.Author) = list("Female" = 0, "Male" = 1)
+levels(citations$Gender.of.Citation) = list("Female" = 0, "Male" = 1)
+levels(citations$field) = list("History" = 1, "Philosophy/ \n MJT" = 2, 
+                               "Literature" = 3, "Ancient Text" = 4, 
+                               "Sociology/ \n Ethnography/ \n Contemporary" = 5)
+levels(citations$time.period) = list("Ancient" = 1, "Medieval" = 2, "Modern" =3)
+levels(citations$JS.or.RS) = list("Jewish Studies" = "JS", "Religious Studies" = "RS")
+```
+
+```{r}
+citations$Gender.of.Article.Author = factor(citations$Gender.of.Article.Author)
+citations$JS.or.RS = factor(citations$JS.or.RS)
+citations$field = factor(citations$field)
+citations$time.period = factor(citations$time.period)
+
+citations$Gender.of.Citation = factor(citations$Gender.of.Citation)
+```
+
+```{r}
+summary(citations)
+```
+
+```{r}
+test = glm(Gender.of.Citation ~ Gender.of.Article.Author + JS.or.RS + field + time.period, 
+          data = na.omit(citations), family=binomial(link=logit))#logistic regression
+summary(test)
+```
+We use logistic regression here to explore the influence the categorical variables bring to our response variable "Gender of Citation". We are going to analyze from the view of variable coefficients (the column named " Estimate" under the summary output):
+
+Being in the gender of male as an author, versus female, increases the log odds of citing female (versus citing male) by 0.76%.
+or let's say:
+Being in the gender of male as an author, versus female, increases citing female (versus citing male) by 0.76% (i.e. exp(0.0076)-1=0.0076)
+
+Being in the journal of Religious Studies(RS), versus Jewish Studies(JS), decreases the log odds of citing female (versus citing male) by 0.16%.
+or let's say:
+Being in the gender of male as an author, versus female, increases citing female (versus citing male) by 0.16% (i.e. exp(0.0016)-1=0.0016)
+
+Being in the field of Philosophy/MJT, versus history, increases citing female (versus citing male) by 0.87% (i.e. exp(0.0087)-1=0.0087);
+Being in the field of Literature, versus Philosophy/MJT, decreases citing female (versus citing male) by 0.03% (i.e. exp(0.0003)-1=0.0003)
+Being in the field of Ancient Text, versus literature, decreases citing female (versus citing male) by 0.32% (i.e. exp(0.0032)-1=0.0032)
+Being in the field of Sociology/Ethnography/Contemporary, versus Ancient Text, decreases citing female (versus citing male) by 0.03% (i.e. exp(0.0003)-1=0.0003)
+
+Being in the time period of Medieval, versus Ancient, increases citing female (versus citing male) by 0.12% (i.e. exp(0.0012)-1=0.0012);
+Being in the time period of Modern, versus Medieval, increases citing female (versus citing male) by 0.11% (i.e. exp(0.0011)-1=0.0011);
+
+
+If an author is male instead of female, he is exp(.76419) = 2.147254 times a likely to cite a male author.
+If an author is Philosophy/MJT, s/he is exp(.86968) = 2.386147 times as likely to cite a male author than if she is in History (or any other field).
+There is weak evidence that if the author is in a Religious Studies journal, s/he is exp(-0.16395) = 84.87845 as likely to cite a male author than if it is a Jewish Studies text.
+Nothing else is significant.
+
+You could also state these as follows:
+If an author is male instead of female, he is 1/exp(.76419) = 46.5711% as likely to cite a female author.
+If an author is in Philosophy/MJT, s/he is 1/exp(.86968) = 41.90856% as likely to cite a female author than if the author is in History.  (And all other fields are roughly at the same level as History.)
+There is weak evidence that if the author is in a Religious Studies journal, s/he is 1/exp(-0.16395) = 117.8155% as likely to cite a female author than if it is a Jewish Studies text.
+Nothing else is significant.
+```{r}
+Anova(test)
+```
+
+Taking other variables (Gender.of.Article.Author, field,) into account, it can be seen that the categorical variable "JS.or.RS" and "time.period" is not significantly associated with the response variable (y: Gender of Citation)
+
