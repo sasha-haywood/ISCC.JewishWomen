@@ -45,7 +45,18 @@ summary(citations)
 test = glm(Gender.of.Citation ~ Gender.of.Article.Author + JS.or.RS + field + time.period, 
           data = na.omit(citations), family=binomial(link=logit))#logistic regression
 summary(test)
+
+
 ```
+```{r}
+# let's recalculate this in terms of likelyhood of citing female instead of likelyhood of citing male:
+
+citations$Gender.of.Citation = relevel(citations$Gender.of.Citation, ref = "Male")
+female.test = glm(Gender.of.Citation ~ Gender.of.Article.Author + JS.or.RS + field + time.period, 
+          data = na.omit(citations), family=binomial(link=logit))#logistic regression
+summary(female.test)
+```
+
 We use logistic regression here to explore the influence the categorical variables bring to our response variable "Gender of Citation". We are going to analyze from the view of variable coefficients (the column named " Estimate" under the summary output):
 
 Being in the gender of male as an author, versus female, increases the log odds of citing female (versus citing male) by 0.76%.
@@ -65,16 +76,18 @@ Being in the time period of Medieval, versus Ancient, increases citing female (v
 Being in the time period of Modern, versus Medieval, increases citing female (versus citing male) by 0.11% (i.e. exp(0.0011)-1=0.0011);
 
 
-If an author is male instead of female, he is exp(.76419) = 2.147254 times a likely to cite a male author.
-If an author is Philosophy/MJT, s/he is exp(.86968) = 2.386147 times as likely to cite a male author than if she is in History (or any other field).
-There is weak evidence that if the author is in a Religious Studies journal, s/he is exp(-0.16395) = 84.87845 as likely to cite a male author than if it is a Jewish Studies text.
+If an author is male instead of female, he is exp(.76419) = 2.15 times a likely to cite a male author. (Likelihood of citing male increases by 115%)
+If an author is Philosophy/MJT, s/he is exp(.86968) = 2.39 times as likely to cite a male author than if the author is in History (or any other field). (Likelyhood of citing male increases by 139%)
+There is weak evidence that if the author is in a Religious Studies journal, s/he is exp(-0.16395) = .85 times (85%) as likely to cite a male author than if it is a Jewish Studies journal. (Likelyhood of citing male decreases by 15%)
 Nothing else is significant.
 
 You could also state these as follows:
-If an author is male instead of female, he is 1/exp(.76419) = 46.5711% as likely to cite a female author.
-If an author is in Philosophy/MJT, s/he is 1/exp(.86968) = 41.90856% as likely to cite a female author than if the author is in History.  (And all other fields are roughly at the same level as History.)
-There is weak evidence that if the author is in a Religious Studies journal, s/he is 1/exp(-0.16395) = 117.8155% as likely to cite a female author than if it is a Jewish Studies text.
+If an author is male instead of female, he is exp(-.76419) = 47% as likely to cite a female author. (Likelyhood of citing female decreases by 53%)
+If an author is in Philosophy/MJT, s/he is exp(-.86968) = 42% as likely to cite a female author than if the author is in History.  (And all other fields are roughly at the same level as History.) (Likelihood of citing female decreases by 58%)
+There is weak evidence that if the author is in a Religious Studies journal, s/he is exp(0.16395) = 118% (1.18 times) as likely to cite a female author than if it is a Jewish Studies journal.  (Likelihood of citing female increases by 18%)
 Nothing else is significant.
+
+
 ```{r}
 Anova(test)
 ```
