@@ -52,9 +52,10 @@ summary(test)
 # let's recalculate this in terms of likelyhood of citing female instead of likelyhood of citing male:
 
 citations$Gender.of.Citation = relevel(citations$Gender.of.Citation, ref = "Male")
-female.test = glm(Gender.of.Citation ~ Gender.of.Article.Author + JS.or.RS + field + time.period, 
+female.test = glm(Gender.of.Citation ~ Gender.of.Article.Author + field + JS.or.RS + time.period, 
           data = na.omit(citations), family=binomial(link=logit))#logistic regression
 summary(female.test)
+
 ```
 
 We use logistic regression here to explore the influence the categorical variables bring to our response variable "Gender of Citation". We are going to analyze from the view of variable coefficients (the column named " Estimate" under the summary output):
@@ -90,7 +91,39 @@ Nothing else is significant.
 
 ```{r}
 Anova(test)
+Anova(female.journals2)
 ```
 
 Taking other variables (Gender.of.Article.Author, field,) into account, it can be seen that the categorical variable "JS.or.RS" and "time.period" is not significantly associated with the response variable (y: Gender of Citation)
 
+```{r}
+citations$journal = relevel(citations$journal, ref = "JAAR")
+female.journals = glm(Gender.of.Citation ~ journal, data = na.omit(citations),
+                      family=binomial(link=logit))
+summary(female.journals)
+
+citations$journal = relevel(citations$journal, ref = "AJSR")
+female.journals = glm(Gender.of.Citation ~ journal, data = na.omit(citations),
+                      family=binomial(link=logit))
+summary(female.journals)
+
+citations$journal = relevel(citations$journal, ref = "JQR")
+female.journals = glm(Gender.of.Citation ~ journal, data = na.omit(citations),
+                      family=binomial(link=logit))
+summary(female.journals)
+
+citations$journal = relevel(citations$journal, ref = "JSS")
+female.journals = glm(Gender.of.Citation ~ journal, data = na.omit(citations),
+                      family=binomial(link=logit))
+summary(female.journals)
+
+citations$journal = relevel(citations$journal, ref = "MJ")
+female.journals = glm(Gender.of.Citation ~ journal, data = na.omit(citations),
+                      family=binomial(link=logit))
+summary(female.journals)
+
+citations$journal = relevel(citations$journal, ref = "PRO")
+female.journals = glm(Gender.of.Citation ~ journal, data = na.omit(citations),
+                      family=binomial(link=logit))
+summary(female.journals)
+```
